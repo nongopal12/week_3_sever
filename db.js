@@ -3,7 +3,7 @@ const con = db.createConnection({
     host:'localhost',
     user:'root',
     password:'',
-    database:'test'
+    database:'db'
 })
 
 module.exports = con;

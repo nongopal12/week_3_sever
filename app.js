@@ -110,7 +110,45 @@ app.get('/expenses/today/:user_id', (req, res) => {
 })
 
 // resarch expense
-    //เขียนตรงนี้
+    app.get('/expenses/search/:user_id', (req, res) => {
+  const userId = req.params.user_id;
+  const { item, from, to, min, max } = req.query;
+
+  const wh = ["user_id = ?"];
+  const params = [userId];
+
+  if (item) {
+    wh.push("item LIKE ?");
+    params.push(`%${item}%`);
+  }
+  if (from) {
+    wh.push("date >= ?");
+    params.push(`${from} 00:00:00`);
+  }
+  if (to) {
+    wh.push("date <= ?");
+    params.push(`${to} 23:59:59`);
+  }
+  if (min) {
+    wh.push("paid >= ?");
+    params.push(Number(min));
+  }
+  if (max) {
+    wh.push("paid <= ?");
+    params.push(Number(max));
+  }
+
+  const sql = `
+    SELECT * 
+    FROM expense 
+    WHERE ${wh.join(" AND ")}
+    ORDER BY date DESC, id DESC
+  `;
+  con.query(sql, params, (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Database error!' });
+    res.json(rows);
+  });
+});
 
 
 

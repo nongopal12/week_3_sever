@@ -120,7 +120,27 @@ app.get('/expenses/today/:user_id', (req, res) => {
 
 
 // Delete an expense
-    //เขียนตรงนี้
+app.delete('/expenses/:id', (req, res) => {
+    const expenseId = req.params.id;
+
+    if (!expenseId) {
+        return res.status(400).json({ error: 'Expense ID is required!' });
+    }
+
+    const sql = "DELETE FROM expense WHERE id = ?";
+    con.query(sql, [expenseId], (err, result) => {
+        if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ error: 'Database error! Cannot delete expense.' });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Expense not found!' });
+        }
+
+        res.json({ message: 'Expense deleted successfully!' });
+    });
+});
 
 
 

@@ -138,7 +138,7 @@ app.get('/expenses', (req, res) => {
         if (err) {
             return res.status(500).json({ error: 'Database error!' });
         }
-        res.json(result);//GGEZsssadasdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        res.json(result);
     })
 })
 

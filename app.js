@@ -115,7 +115,32 @@ app.get('/expenses/today/:user_id', (req, res) => {
 
 
 // Add new expense
-    //เขียนตรงนี้
+app.post('/expenses',(req,res)=> {
+    const { user_id, item, paid } = req.body;
+
+if (!user_id || !item || !paid) {
+    return res.status(400).json({ error: 'Missing required fields!' });
+}
+
+const date = new Date();
+const sql = "INSERT INTO expense (user_id, item, paid, date) VALUES (?, ?, ?, ?)";
+con.query(sql, [user_id, item, paid, date], (err, result) => {
+    if (err) {
+        return res.status(500).json({ error: 'Database error! Cannot add expense.' });
+    }
+    res.status(201).json({ message: 'Expense added successfully!', expenseId: result.insertId });
+    })
+})
+
+app.get('/expenses', (req, res) => {
+    const sql = "SELECT * FROM expense";
+    con.query(sql, (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error!' });
+        }
+        res.json(result);
+    })
+})
 
 
 
